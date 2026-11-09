@@ -1,0 +1,7 @@
+{
+  "name": "journeyflow",
+  "version": "0.3.0",
+  "description": "Connects Codex to the Journeyflow MCP and adds skills for reading and updating journeys, insights and evidence.",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}
