@@ -1,0 +1,10 @@
+{
+  "name": "journeyflow",
+  "version": "0.1.0",
+  "description": "Connects Claude to the Journeyflow MCP and adds skills for reading and updating journeys, insights and evidence.",
+  "author": {
+    "name": "Big Motive",
+    "email": "jonathanw@bigmotive.com"
+  },
+  "keywords": ["journeyflow", "journey-mapping", "research", "base44"]
+}

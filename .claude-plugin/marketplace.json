@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "big-motive",
+  "description": "Big Motive's internal Claude plugins: Journeyflow access plus the team's shared skills.",
+  "owner": {
+    "name": "Big Motive",
+    "email": "jonathanw@bigmotive.com"
+  },
+  "plugins": [
+    {
+      "name": "journeyflow",
+      "source": "./plugins/journeyflow",
+      "description": "Connects Claude to Journeyflow (journeys, insights, evidence, opportunities) and adds skills for working with it.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "tags": ["journeyflow", "research", "service-design"]
+    }
+  ]
+}

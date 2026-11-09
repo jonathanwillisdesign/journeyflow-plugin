@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "journeyflow": {
+      "type": "http",
+      "url": "https://joureny-flow.base44.app/api/mcp"
+    }
+  }
+}
