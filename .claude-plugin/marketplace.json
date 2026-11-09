@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "big-motive",
-  "description": "Big Motive's internal Claude plugins: Journeyflow access plus the team's shared skills.",
+  "name": "journeyflow",
+  "description": "Journeyflow for Claude: the Journeyflow MCP connection plus shared skills for working with it.",
   "owner": {
     "name": "Big Motive",
     "email": "jonathanw@bigmotive.com"
