@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "journeyflow": {
+      "type": "streamable-http",
+      "url": "https://joureny-flow.base44.app/api/mcp"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "journeyflow",
+  "version": "0.3.0",
+  "description": "Connects agents to Journeyflow (journeys, insights, evidence, opportunities) via MCP and shared skills for working with it.",
+  "author": {
+    "name": "Big Motive",
+    "email": "jonathanw@bigmotive.com"
+  },
+  "homepage": "https://github.com/jonathanwillisdesign/journeyflow-plugin",
+  "repository": "https://github.com/jonathanwillisdesign/journeyflow-plugin",
+  "keywords": ["journeyflow", "journey-mapping", "research", "base44", "mcp"]
+}

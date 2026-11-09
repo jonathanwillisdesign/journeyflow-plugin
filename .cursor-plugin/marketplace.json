@@ -1,0 +1,22 @@
+{
+  "name": "journeyflow",
+  "displayName": "Journeyflow",
+  "owner": {
+    "name": "Big Motive",
+    "email": "jonathanw@bigmotive.com"
+  },
+  "metadata": {
+    "description": "Journeyflow MCP connection and shared skills for journey mapping and UX research.",
+    "version": "0.3.0",
+    "pluginRoot": "plugins"
+  },
+  "plugins": [
+    {
+      "name": "journeyflow",
+      "source": "journeyflow",
+      "description": "Connects Cursor to Journeyflow (journeys, insights, evidence, opportunities) and adds skills for working with it.",
+      "version": "0.3.0",
+      "keywords": ["journeyflow", "research", "service-design"]
+    }
+  ]
+}

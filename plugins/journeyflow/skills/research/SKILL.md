@@ -9,23 +9,23 @@ Follow the `journeyflow-workspace` skill for finding the workspace, tool names a
 
 ## The model
 
-- `Study`: `name`, `method` (interview, usability_test, survey, analytics, competitor, desk_research, other), `goal`, `status` (planning, fieldwork, synthesis, closed), `research_questions` / `question_ids`, `user_type_ids`.
-- `Session`: one participant session in a study. `participant`, `segment`, `consent`, `summary`, `notes`, `transcript`, `highlights`, `synthesised`.
-- `Evidence`: one observation. `type` (quote, observation, metric, clip, artefact), `kind` (quote, observation, friction, win, wish), `content`, `so_what`, `session_id`, `study_id`, `theme_ids`. AI-suggested evidence has `origin: ai` and `ai_status` (suggested, kept, dismissed).
-- `Insight`: `title`, `description`, `polarity`, `severity`, `confidence`, `status` (draft, validated, actioned, archived…). Linked to evidence by `EvidenceLink` (`role`: supports or contradicts, `strength`: weak, moderate or strong).
-- `Theme`: a cluster of insights within a study.
-- `ResearchQuestion`: `question`, `why_it_matters`, `status` (open, in_study, partly_answered, answered), `answer`, `priority`, `map_id` / `stage_id`.
+- `ResearchQuestion`: backlog item (`question`, `why_it_matters`, `status` open/partly_answered/answered, `priority`, `study_ids`, `map_id`, `card_ids`, `in_study` flag). Workflow starts here, then studies, then insights.
+- `Study`: `name`, `method` (interview, usability_test, survey, analytics, competitor, desk_research, other), `goal`, `status` (planning, fieldwork, synthesis, reporting, closed), `mode` (question_led, freeform), `question_ids`, `user_type_ids`, `variant_ids`, `guide_sections`.
+- `Session`: participant session (`consent` none/recording/recording_and_quotes, `delete_by`, `summary`, `note_items`, `highlights`, `transcript` / `transcript_uri`, `synthesised`).
+- `Evidence`: observation (`type` quote/observation/metric/clip/artefact; `format` quote/observation; `category` for synthesis). Legacy `kind` (quote, observation, friction, win, wish) may still appear. AI suggestions: `origin: ai`, `ai_status` suggested/kept/dismissed. Link `theme_ids` (preferred) not legacy string `themes`.
+- `Insight`: `title`, `description`, `polarity` (pain_point, delighter, neutral), `confidence` (low, medium, high), `status` (draft, validated, actioned, archived, plus legacy backlog/in_progress/completed), `supporting_evidence_ids` / `contradictory_evidence_ids` and/or `EvidenceLink` (`role` supports/contradicts, `strength` weak/moderate/strong).
+- `Theme`: study-scoped cluster (`study_id`, `name`, `evidence_ids`, `insight_ids`, `status` suggested/active/merged/archived).
 
 ## Planning a study
 
-Start from open `ResearchQuestion` records (by priority, or tied to a journey). Propose: goal, method and why, who (user types, number of participants), and a discussion guide grouped by research question, with open, non-leading prompts. Create the `Study` with `status: planning` on approval.
+Start from open `ResearchQuestion` records (by priority, or tied to a journey). Propose: goal, method and why, who (user types and variants, number of participants), and a discussion guide grouped by research question, with open, non-leading prompts. Create the `Study` with `status: planning` on approval and link `question_ids`.
 
 ## Synthesising
 
-1. Read sessions with `synthesised: false` for the study. Work from `notes`, `highlights` and `summary`; read `transcript` only when needed.
-2. Extract evidence: one observation per record, verbatim for quotes, with `kind` and a one-line `so_what`. Link `session_id` and `study_id`.
-3. Group into themes, then write insights. An insight is a "so what" that would change a decision, not a restatement of a quote.
-4. Link each insight to evidence with `EvidenceLink`, including contradicting evidence. Set `strength` honestly.
+1. Read sessions with `synthesised: false` for the study. Work from `note_items`, `highlights` and `summary`; read `transcript` only when needed.
+2. Extract evidence: one observation per record, verbatim for quotes, with `format`/`category` and a one-line `so_what`. Link `session_id` and `study_id`.
+3. Group into `Theme` records, then write insights. An insight is a "so what" that would change a decision, not a restatement of a quote. Set `polarity` honestly.
+4. Link each insight to evidence (arrays and/or `EvidenceLink`), including contradicting evidence. Set `strength` honestly.
 5. Set `confidence`: high means several sessions with strong support and no serious contradiction; low means one or two sources. Leave new insights at `status: draft` for the team to validate.
 6. Mark sessions `synthesised: true` only after the user agrees.
 
@@ -35,7 +35,7 @@ Start from open `ResearchQuestion` records (by priority, or tied to a journey). 
 
 ## Dovetail
 
-`list_dovetail_projects`, then `sync_dovetail_project` (`workspace_id`, `dovetail_project_id`, optional `study_id`). Re-syncing is safe.
+`list_dovetail_projects`, then `sync_dovetail_project` (`workspace_id`, `dovetail_project_id`, optional `study_id`). Confirm before sync: it writes into the evidence library. Re-syncing is safe.
 
 ## Rules
 
