@@ -30,7 +30,7 @@ Publish the `plugins/journeyflow` folder to your organisation's plugin library o
 /plugin install journeyflow@journeyflow
 ```
 
-The repo is private, so you need read access on GitHub. For local testing you can pass the folder path instead.
+For local testing you can pass the folder path instead.
 
 Then run `/mcp`, select **journeyflow** and sign in with your Journeyflow account. Every call runs as you, with your Journeyflow permissions.
 
