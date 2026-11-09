@@ -6,18 +6,31 @@ The Journeyflow Claude plugin marketplace. Add it once and the team gets Journey
 
 | Plugin | What it does |
 |---|---|
-| [`journeyflow`](plugins/journeyflow) | Connects Claude to the Journeyflow MCP (`https://joureny-flow.base44.app/api/mcp`) and adds skills: `journeyflow-workspace` (finding and safely editing data) and `journey-briefing` (summarise a journey with its research). |
+| [`journeyflow`](plugins/journeyflow) | Connects Claude to the Journeyflow MCP (`https://joureny-flow.base44.app/api/mcp`) and adds the skills below. |
 
-## Install
+### Skills
 
-In Claude Code:
+| Skill | Use it for |
+|---|---|
+| `journeyflow-workspace` | The base: finding workspaces and records, tool names, confirming before changes |
+| `journey` | Briefing, critiquing, building and editing journey maps, current and future state |
+| `persona` | Personas, mindsets, user types and JTBD, drafted from and checked against evidence |
+| `research` | Planning studies, synthesising sessions, evidence, themes, insights, research questions, Dovetail |
+| `ux-ui` | Design needs from research, UX critique, screen catalogue, screenshots, design system rules |
+| `strategy` | Opportunities, prioritisation, solutions, initiatives, metrics, experiments, client recommendations |
+
+## Install in the Claude app (claude.ai and Claude Desktop)
+
+Publish the `plugins/journeyflow` folder to your organisation's plugin library on claude.ai. Once an admin approves it, teammates install it from the library and it works in chat and Cowork. Each person then connects Journeyflow when Claude first asks (or from the connector settings) and signs in with their own account.
+
+## Install in Claude Code
 
 ```
 /plugin marketplace add <path-or-github-repo>
 /plugin install journeyflow@journeyflow
 ```
 
-Use the local path while it lives on a Desktop (for example `~/Desktop/journeyflow-claude-plugins`). Once it's on GitHub, use `owner/repo`.
+Use the local path while it lives on a Desktop (for example `~/Desktop/journeyflow-plugin`). Once it's on GitHub, use `owner/repo`.
 
 Then run `/mcp`, select **journeyflow** and sign in with your Journeyflow account. Every call runs as you, with your Journeyflow permissions.
 

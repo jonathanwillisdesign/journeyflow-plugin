@@ -1,6 +1,6 @@
 {
   "name": "journeyflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Connects Claude to the Journeyflow MCP and adds skills for reading and updating journeys, insights and evidence.",
   "author": {
     "name": "Big Motive",
