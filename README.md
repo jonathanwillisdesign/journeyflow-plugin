@@ -1,6 +1,6 @@
 # Journeyflow agent plugins
 
-Portable **Agent Plugins 1.0.0** package plus Claude-specific manifests. One `skills/` tree and one canonical `mcp.json`; install steps differ per tool.
+Portable **Agent Plugins 1.0.0** package plus Claude-specific manifests. One `skills/` tree and one canonical `mcp.json`; install steps differ per tool. The ChatGPT web package is generated from those skills after a workspace admin registers the Journeyflow MCP server.
 
 ## What ships
 
@@ -14,6 +14,7 @@ Portable **Agent Plugins 1.0.0** package plus Claude-specific manifests. One `sk
 | [`plugins/journeyflow/.codex-plugin/`](plugins/journeyflow/.codex-plugin/) | OpenAI Codex plugin manifest (see gaps below) |
 | [`.cursor-plugin/marketplace.json`](.cursor-plugin/marketplace.json) | Cursor multi-plugin repo catalogue |
 | [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | Claude marketplace catalogue |
+| [`scripts/build-chatgpt-web.mjs`](scripts/build-chatgpt-web.mjs) | Builds a ChatGPT web ZIP for an approved workspace app ID |
 
 ### Skills
 
@@ -28,7 +29,7 @@ Portable **Agent Plugins 1.0.0** package plus Claude-specific manifests. One `sk
 
 ## MCP authentication
 
-Journeyflow MCP URL: `https://joureny-flow.base44.app/api/mcp` (spelling is intentional). Every call runs as the signed-in user via Base44 OAuth. Connect the server in your agent, then sign in when prompted.
+Journeyflow MCP URL: `https://joureny-flow.base44.app/api/mcp` (spelling is intentional). Every call runs as the signed-in user via Base44 OAuth. Connect the server in your agent, then sign in when prompted. The endpoint advertises the `app:mcp` and `offline` scopes through OAuth discovery; the portable MCP manifest declares both for OpenAI clients.
 
 ## Install
 
@@ -52,15 +53,25 @@ Cursor loads **Agent Plugins** natively from a root `plugin.json` plus `skills/`
 
 Skills from the repo are **not** loaded until the plugin is installed (skills are not auto-imported from git alone).
 
-### OpenAI Codex (CLI / desktop)
+### ChatGPT web workspace (admin rollout)
 
-OpenAI documents **Codex plugins** with [`.codex-plugin/plugin.json`](https://developers.openai.com/api/docs/guides/agents-api/tools/plugins), `skills` paths and `mcpServers` pointing at a plugin `.mcp.json`. Recent Codex builds also participate in the **Agent Plugins** ecosystem ([Speakeasy overview](https://www.speakeasy.com/blog/release-agent-plugins-support)); treat **`plugins/journeyflow/plugin.json`** as the portable entry when your Codex version supports it.
+ChatGPT web needs an approved **custom MCP app**. Importing this repository's bundled-MCP plugin directly can mark it **Desktop only**, even though the MCP URL is remote. The web ZIP built below contains the same skills and a reference to the approved app, without `mcp.json` or `.mcp.json`. See [OpenAI's marketplace import guidance](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github) and [custom MCP setup](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt).
 
-**Documented path today:** install the `plugins/journeyflow` folder as a Codex plugin (manifest under `.codex-plugin/`, shared `skills/` and `mcp.json`). Authenticate Journeyflow in Codex MCP settings.
+1. In a ChatGPT Business or Enterprise/Edu workspace, an admin opens **Plugins → Add custom MCP server** and enters `https://joureny-flow.base44.app/api/mcp`. Use OAuth, complete sign-in, inspect the discovered tools, and test a read and a permitted write. Publish the app for the intended roles.
+2. Copy the approved **app ID** from its admin URL or app details. It starts with `asdk_app_`, `connector_`, or `templated_apps_`; it is not the plugin ID.
+3. From this repository, build the workspace-specific ZIP:
 
-**Manual fallback:** add the server to `~/.codex/config.toml` or a trusted repo’s `.codex/config.toml` (see [Codex manual](https://learn.chatgpt.com/docs/codex-manual)), then copy skills into `.agents/skills/` **only if** you are not using the plugin installer—avoid duplicating skill text; symlink or point at this repo instead.
+   ```bash
+   node scripts/build-chatgpt-web.mjs <approved-app-id>
+   ```
 
-**Gap:** There is no single published “install this GitHub repo” flow for all Codex surfaces yet; if plugin install is unavailable, use MCP + `.agents/skills` symlink to `plugins/journeyflow/skills`.
+4. Upload `dist/journeyflow-chatgpt-web.zip` as a workspace plugin, review its required Journeyflow app and skills, then publish it to the intended roles. Members still sign in to Journeyflow individually. A different ChatGPT workspace needs a new ZIP built with **that workspace's** app ID.
+
+The generated ZIP is ignored by Git. Do not commit an app ID or credentials to the portable plugin. If you only need the MCP tools and not the skills, stop after step 1.
+
+### OpenAI Codex / ChatGPT desktop
+
+The canonical `plugins/journeyflow` package includes the remote MCP server and shared skills for clients that install portable Agent Plugins. Codex desktop can also add a marketplace with `codex plugin marketplace add jonathanwillisdesign/journeyflow-plugin`; sign in to Journeyflow when prompted. A ChatGPT admin can import this repository through **Admin Console → Plugins → Add → Import marketplace**, but the bundled-MCP package may be limited to desktop. Use the web workflow above for ChatGPT web.
 
 ### Claude Code
 
@@ -86,7 +97,17 @@ Project rollout (`.claude/settings.json`):
 
 ### Claude app (claude.ai / Desktop)
 
-Publish `plugins/journeyflow` to the organisation plugin library. Teammates install from the library and connect Journeyflow when prompted.
+On a Team or Enterprise plan, an owner can upload a ZIP containing the `journeyflow/` plugin folder through **Organization settings → Plugins & skills → Add → Upload a plugin**. Build it from the repository root:
+
+```bash
+mkdir -p dist
+cd plugins
+zip -q -r ../dist/journeyflow-claude.zip journeyflow -x '*/.DS_Store'
+```
+
+Cowork and Skills must both be enabled. Set the installation preference (Available, Installed by default, or Required) and have each teammate connect Journeyflow with their own account. The remote MCP works in Claude chat as well as Cowork and Claude Code.
+
+Claude's organization **GitHub sync requires a private or internal repository** on github.com; this repository is public. To use automatic sync, move or mirror the marketplace to a private/internal repository and configure it in the organization settings. Individual Claude Code users can still add this public repository with the command above. See [Claude's organization plugin guidance](https://support.claude.com/en/articles/13837433-manage-plugins-for-your-organization).
 
 ### Other agents (OpenCode, etc.)
 
@@ -119,7 +140,7 @@ scripts/
 1. Edit skills only under `plugins/journeyflow/skills/`.
 2. Change MCP in `plugins/journeyflow/mcp.json`, then run `node scripts/sync-mcp-config.mjs`.
 3. Bump `version` in `plugin.json`, `.claude-plugin/plugin.json`, both marketplace files, and `.codex-plugin/plugin.json`.
-4. Run `node scripts/validate-plugin.mjs` (and `claude plugin validate .` when the Claude CLI is available).
+4. Run `node scripts/validate-plugin.mjs` (and `claude plugin validate .` when the Claude CLI is available). For ChatGPT web, rebuild the ZIP with the approved workspace app ID.
 5. Commit; teammates refresh their marketplace install per host.
 
 ## Adding a skill

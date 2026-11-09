@@ -67,6 +67,7 @@ for (const entry of readdirSync(skillsDir)) {
 
 const claudePlugin = readJson(join(pluginDir, ".claude-plugin/plugin.json"), "Claude plugin");
 const claudeMarket = readJson(join(root, ".claude-plugin/marketplace.json"), "Claude marketplace");
+const codexPlugin = readJson(join(pluginDir, ".codex-plugin/plugin.json"), "Codex plugin");
 if (claudePlugin?.version !== agentManifest?.version) {
   fail("Version mismatch: plugin.json vs .claude-plugin/plugin.json");
 }
@@ -74,11 +75,17 @@ const marketEntry = claudeMarket?.plugins?.find((p) => p.name === "journeyflow")
 if (marketEntry && marketEntry.version !== agentManifest?.version) {
   fail("Version mismatch: plugin.json vs .claude-plugin/marketplace.json");
 }
+if (codexPlugin?.version !== agentManifest?.version) {
+  fail("Version mismatch: plugin.json vs .codex-plugin/plugin.json");
+}
+if (codexPlugin?.mcpServers !== "./.mcp.json") {
+  fail(".codex-plugin/plugin.json: mcpServers must point to ./.mcp.json");
+}
 
 const cursorMarket = readJson(join(root, ".cursor-plugin/marketplace.json"), "Cursor marketplace");
 const cursorEntry = cursorMarket?.plugins?.find((p) => p.name === "journeyflow");
-if (cursorEntry && cursorMarket.metadata?.version !== agentManifest?.version) {
-  fail("Version mismatch: plugin.json vs .cursor-plugin/marketplace.json metadata.version");
+if (cursorEntry && (cursorMarket.metadata?.version !== agentManifest?.version || cursorEntry.version !== agentManifest?.version)) {
+  fail("Version mismatch: plugin.json vs .cursor-plugin/marketplace.json");
 }
 
 const claudeValidate = spawnSync("claude", ["plugin", "validate", "."], {

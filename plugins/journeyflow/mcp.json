@@ -3,7 +3,16 @@
   "mcpServers": {
     "journeyflow": {
       "type": "streamable-http",
-      "url": "https://joureny-flow.base44.app/api/mcp"
+      "url": "https://joureny-flow.base44.app/api/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": { "mode": "dcr" },
+            "baseScopes": ["app:mcp", "offline"]
+          }
+        }
+      }
     }
   }
 }
