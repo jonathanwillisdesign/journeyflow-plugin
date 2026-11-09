@@ -26,11 +26,11 @@ Publish the `plugins/journeyflow` folder to your organisation's plugin library o
 ## Install in Claude Code
 
 ```
-/plugin marketplace add <path-or-github-repo>
+/plugin marketplace add jonathanwillisdesign/journeyflow-plugin
 /plugin install journeyflow@journeyflow
 ```
 
-Use the local path while it lives on a Desktop (for example `~/Desktop/journeyflow-plugin`). Once it's on GitHub, use `owner/repo`.
+The repo is private, so you need read access on GitHub. For local testing you can pass the folder path instead.
 
 Then run `/mcp`, select **journeyflow** and sign in with your Journeyflow account. Every call runs as you, with your Journeyflow permissions.
 
@@ -39,7 +39,7 @@ To roll it out to everyone automatically, add this to a project's `.claude/setti
 ```json
 {
   "extraKnownMarketplaces": {
-    "journeyflow": { "source": { "source": "github", "repo": "<owner>/<repo>" } }
+    "journeyflow": { "source": { "source": "github", "repo": "jonathanwillisdesign/journeyflow-plugin" } }
   },
   "enabledPlugins": { "journeyflow@journeyflow": true }
 }
